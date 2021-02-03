@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %white(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+    <logger name="ch.qos.logback" level="ERROR" />
+    <logger name="org.springframework" level="INFO" />
+    <logger name="org.springframework.web" level="ERROR" />
+    <logger name="org.springframework.data.mongodb" level="DEBUG" />
+    <logger name="com.waes.diffapi" level="DEBUG" />
+</configuration>
