@@ -1,6 +1,6 @@
 package com.waes.diffapi.controller;
 
-import com.waes.diffapi.domain.Side;
+import com.waes.diffapi.domain.constant.Side;
 import com.waes.diffapi.domain.dto.DiffRequest;
 
 import com.waes.diffapi.domain.dto.DiffResponse;

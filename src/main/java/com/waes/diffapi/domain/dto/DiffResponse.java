@@ -9,7 +9,8 @@ import java.util.List;
 @Value
 @Builder
 public class DiffResponse implements Serializable {
+    private static final long serialVersionUID = 5885659661395926957L;
 
-    List<String> insight;
+    List<String> insights;
 
 }

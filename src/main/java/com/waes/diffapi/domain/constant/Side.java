@@ -1,4 +1,4 @@
-package com.waes.diffapi.domain;
+package com.waes.diffapi.domain.constant;
 
 public enum Side {
     LEFT,

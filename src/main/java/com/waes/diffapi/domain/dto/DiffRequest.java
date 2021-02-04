@@ -1,13 +1,13 @@
 package com.waes.diffapi.domain.dto;
 
 import com.waes.diffapi.domain.Diff;
-import com.waes.diffapi.domain.Side;
+import com.waes.diffapi.domain.constant.Side;
 import lombok.Data;
 import java.io.Serializable;
 
 @Data
 public class DiffRequest implements Serializable {
-    private static final long serialVersionUID = -5029722201660045774L;
+    private static final long serialVersionUID = 1729391026156757787L;
 
     String value;
 
