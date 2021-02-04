@@ -7,7 +7,8 @@ import java.io.Serializable;
 
 @Data
 public class DiffRequest implements Serializable {
-    private static final long serialVersionUID = 1429063558898305883L;
+    private static final long serialVersionUID = -5029722201660045774L;
+
     String value;
 
     public Diff convertToDiff(String id, Side side) {
