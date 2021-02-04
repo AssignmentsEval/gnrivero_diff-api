@@ -1,7 +1,7 @@
 package com.waes.diffapi.service;
 
-import com.waes.diffapi.domain.DiffCalculator;
-import com.waes.diffapi.domain.Side;
+import com.waes.diffapi.domain.calculator.DiffCalculator;
+import com.waes.diffapi.domain.constant.Side;
 import com.waes.diffapi.domain.dto.DiffRequest;
 
 import com.waes.diffapi.domain.dto.DiffResponse;
@@ -16,16 +16,14 @@ import reactor.core.publisher.Mono;
 public class ReactiveDiffService implements DiffService {
 
     private DiffReactiveRepository diffRepository;
-    private DiffCalculator calculator;
+    private DiffCalculator diffCalculator;
 
     @Override
     public void createOrUpdateDiff(final String id, final DiffRequest diffRequest, final Side side) {
         diffRepository.findById(id)
                 .defaultIfEmpty(diffRequest.convertToDiff(id, side))
                 .flatMap(d -> Mono.just(diffRequest.convertToDiff(id, side, d.toBuilder())))
-                .flatMap(diffRepository::save)
-                .filter(d -> d.getLeftElement() != null && d.getRightElement() != null)
-                .flatMap(d -> Mono.just(d.toBuilder().insight(calculator.process(d)).build()))
+                .flatMap(d -> Mono.just(d.toBuilder().insights(diffCalculator.calculate(d)).build()))
                 .flatMap(diffRepository::save)
                 .subscribe();
     }
@@ -34,8 +32,8 @@ public class ReactiveDiffService implements DiffService {
     public Mono<DiffResponse> getDiffById(final String id) {
         return diffRepository.findById(id)
                 .flatMap(d -> Mono.just(DiffResponse.builder()
-                        .insight(d.getInsight())
-                        .build()) );
+                        .insights(d.getInsights())
+                        .build()));
     }
 
 }
