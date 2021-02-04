@@ -25,19 +25,16 @@ public class ReactiveDiffService implements DiffService {
                 .flatMap(d -> Mono.just(diffRequest.convertToDiff(id, side, d.toBuilder())))
                 .flatMap(diffRepository::save)
                 .filter(d -> d.getLeftElement() != null && d.getRightElement() != null)
-                .flatMap(d -> Mono.just(d.toBuilder().result(calculator.process(d)).build()))
+                .flatMap(d -> Mono.just(d.toBuilder().insight(calculator.process(d)).build()))
                 .flatMap(diffRepository::save)
                 .subscribe();
     }
 
     @Override
-    public Mono<DiffResponse> getDiffById(String id) {
+    public Mono<DiffResponse> getDiffById(final String id) {
         return diffRepository.findById(id)
                 .flatMap(d -> Mono.just(DiffResponse.builder()
-                        .id(d.getId())
-                        .left(d.getLeftElement())
-                        .right(d.getRightElement())
-                        .result(d.getResult())
+                        .insight(d.getInsight())
                         .build()) );
     }
 

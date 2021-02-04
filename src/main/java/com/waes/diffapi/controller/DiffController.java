@@ -1,6 +1,5 @@
 package com.waes.diffapi.controller;
 
-import com.waes.diffapi.domain.Diff;
 import com.waes.diffapi.domain.Side;
 import com.waes.diffapi.domain.dto.DiffRequest;
 
@@ -46,7 +45,8 @@ public class DiffController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<DiffResponse>> getDiff(@PathVariable String id) {
         return diffService.getDiffById(id)
-                .flatMap(d -> Mono.just(ResponseEntity.notFound().build()));
+                .flatMap(dr -> Mono.just(ResponseEntity.ok(dr)))
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 
 }

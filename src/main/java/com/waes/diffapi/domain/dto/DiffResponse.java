@@ -3,13 +3,13 @@ package com.waes.diffapi.domain.dto;
 import lombok.Builder;
 import lombok.Value;
 
+import java.io.Serializable;
+import java.util.List;
+
 @Value
 @Builder
-public class DiffResponse {
+public class DiffResponse implements Serializable {
 
-    String id;
-    String left;
-    String right;
-    String result;
+    List<String> insight;
 
 }
