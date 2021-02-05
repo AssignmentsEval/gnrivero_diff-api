@@ -13,9 +13,14 @@
     <root level="ERROR">
         <appender-ref ref="CONSOLE"/>
     </root>
-    <logger name="ch.qos.logback" level="ERROR" />
+
+    <logger name="com.waes.diffapi" level="DEBUG"/>
+
     <logger name="org.springframework" level="INFO" />
     <logger name="org.springframework.web" level="ERROR" />
     <logger name="org.springframework.data.mongodb" level="DEBUG" />
-    <logger name="com.waes.diffapi" level="DEBUG" />
+
+    <logger name="ch.qos.logback" level="WARN" />
+    <logger name="de.flapdoodle" level="WARN" />
+
 </configuration>
