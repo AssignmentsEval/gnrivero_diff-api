@@ -20,7 +20,7 @@ public class DiffRequest implements Serializable {
         return convertToDiff(id, side, Diff.builder());
     }
 
-    public Diff convertToDiff(String id, Side side, Diff.DiffBuilder diffBuilder){
+    public Diff convertToDiff(String id, Side side, Diff.DiffBuilder diffBuilder) {
 
         diffBuilder.id(id);
 

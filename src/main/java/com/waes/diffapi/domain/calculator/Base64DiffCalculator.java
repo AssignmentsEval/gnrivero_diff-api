@@ -21,7 +21,7 @@ public class Base64DiffCalculator implements DiffCalculator {
 
     @Getter
     @AllArgsConstructor
-    private enum Result {
+    public enum Result {
         EQUAL("Inputs are equal"),
         NOT_EQUAL_SIZE("Input sizes are not equal"),
         EQUAL_SIZE_DIFFERENT_CONTENT("Result: "),
