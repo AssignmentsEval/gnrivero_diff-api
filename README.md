@@ -1,5 +1,12 @@
 # diff-api
 
+Base64 encoded data comparing application. 
+
+This application is made on Spring Boot Framework using reactive
+web stack with embedded Netty and MongoDB so it's self-contained.  
+
+You will require compatibility with Java 8+ to run this application.
+
 <h3>How to build and run diff-api application</h3>
 
 Prior to run any command go to the application folder 'diff-api/'. <br>
@@ -7,6 +14,8 @@ Prior to run any command go to the application folder 'diff-api/'. <br>
 First ensure application builds and  all tests run correctly. To do so, in a linux/unix console run:
 
 `./gradlew build`
+
+This also runs Jacoco Test Report that can be found in `build/reports/jacoco/index.html`
 
 Second, to run the application just execute:
 
