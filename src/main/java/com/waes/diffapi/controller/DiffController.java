@@ -1,5 +1,6 @@
 package com.waes.diffapi.controller;
 
+import com.waes.diffapi.domain.Diff;
 import com.waes.diffapi.domain.constant.Side;
 import com.waes.diffapi.domain.dto.DiffRequest;
 
@@ -30,16 +31,14 @@ public class DiffController {
 
     @PostMapping(value = "/{id}/left", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
-    public Mono<?> createLeftInput(@PathVariable String id, @RequestBody DiffRequest diffRequest) {
-        diffService.createOrUpdateDiff(id, diffRequest, Side.LEFT);
-        return Mono.empty();
+    public Mono<Diff> createLeftInput(@PathVariable String id, @RequestBody DiffRequest diffRequest) {
+        return diffService.createOrUpdateDiff(id, diffRequest, Side.LEFT);
     }
 
     @PostMapping(value = "/{id}/right", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
-    public Mono<?> createRightInput(@PathVariable String id, @RequestBody DiffRequest diffRequest) {
-        diffService.createOrUpdateDiff(id, diffRequest, Side.RIGHT);
-        return Mono.empty();
+    public Mono<Diff> createRightInput(@PathVariable String id, @RequestBody DiffRequest diffRequest) {
+        return diffService.createOrUpdateDiff(id, diffRequest, Side.RIGHT);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
