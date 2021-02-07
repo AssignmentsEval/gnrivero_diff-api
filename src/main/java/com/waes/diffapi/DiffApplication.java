@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 
 /**
  * Diff Application
- * ----
+ * 
  *
  * This application uses Spring Boot as framework and MongoDB.
  *

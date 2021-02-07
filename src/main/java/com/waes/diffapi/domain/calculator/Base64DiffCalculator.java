@@ -10,6 +10,32 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/**
+ * Diff Calculator Implementation
+ *
+ * This particular implementation decodes base64 information and converts it to
+ * byte array (binary and original data).
+ *
+ * After the comparison returns a result with details about the computation.
+ *
+ * All data received is supposed to be valid, so no validation is made here.
+ * Only check for null values to avoid NPE.
+ *
+ * Possible results:
+ *
+ * "Equal": Left and right are equal in size and content.
+ *
+ * "Different Size": Left and right are present but differ in length.
+ *
+ * "Both Sides Required": Indicates that one of the sides is null or empty. I don't considered null
+ * as a sizeable element, so "Different Size" doesn't apply here. Besides it's more descriptive of the
+ * real situation.
+ *
+ * "Equal Size, Different Content": When both sides are present, have the same length but differ in content.
+ * Along with this state a report including Offset where the difference is and Length of the difference is return.
+ *
+ */
 @Component
 public class Base64DiffCalculator implements DiffCalculator {
 
@@ -23,9 +49,9 @@ public class Base64DiffCalculator implements DiffCalculator {
     @AllArgsConstructor
     public enum Result {
         EQUAL("Inputs are equal"),
-        NOT_EQUAL_SIZE("Input sizes are not equal"),
+        DIFFERENT_SIZE("Input sizes are not equal"),
         EQUAL_SIZE_DIFFERENT_CONTENT("Result: "),
-        ONE_SIDE_MISSING("Both sides are required to calculate diff");
+        BOTH_SIDES_REQUIRED("Both sides are required to calculate diff");
 
         String insight;
     }
@@ -34,14 +60,14 @@ public class Base64DiffCalculator implements DiffCalculator {
     public List<String> calculate(final Diff diff) {
 
         if(diff.getLeftElement() == null || diff.getRightElement() == null) {
-            return List.of(Result.ONE_SIDE_MISSING.getInsight());
+            return List.of(Result.BOTH_SIDES_REQUIRED.getInsight());
         }
 
         byte[] left = decoder.decode(diff.getLeftElement());
         byte[] right = decoder.decode(diff.getRightElement());
 
         if (left.length != right.length) {
-            return List.of(Result.NOT_EQUAL_SIZE.getInsight());
+            return List.of(Result.DIFFERENT_SIZE.getInsight());
         }
 
         int diffLength = 0;
