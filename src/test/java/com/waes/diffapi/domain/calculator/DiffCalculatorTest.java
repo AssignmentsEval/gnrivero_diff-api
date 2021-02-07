@@ -21,8 +21,8 @@ public class DiffCalculatorTest {
     }
 
     @Test
-    @DisplayName("Given two equal inputs must return 'Inputs are equal'")
-    void mustReturnEqual() {
+    @DisplayName("When two inputs are equal must return 'Inputs are equal'")
+    void when_diffElementsAreEqual_mustReturnEqual() {
 
         var diff = Diff.builder().id("1").leftElement("dGVzdA==").rightElement("dGVzdA==").build();
 
@@ -33,8 +33,8 @@ public class DiffCalculatorTest {
     }
 
     @Test
-    @DisplayName("Given two inputs with different size must return 'Input sizes are not equal'")
-    void mustReturnSizeNotEqual() {
+    @DisplayName("When two inputs are of different size must return 'Input sizes are not equal'")
+    void when_differentSize_mustReturnSizeNotEqual() {
 
         var diff = Diff.builder().id("1").leftElement("dGVzdHRlc3Q=").rightElement("dGVzdA==").build();
 
@@ -45,8 +45,8 @@ public class DiffCalculatorTest {
     }
 
     @Test
-    @DisplayName("Given one input must return 'Both sides are required to calculate diff'")
-    void mustReturnOneElementMissing() {
+    @DisplayName("When one input is present must return 'Both sides are required to calculate diff'")
+    void when_justOneDiffElementIsPresent_mustReturnOneElementMissing() {
 
         var diff = Diff.builder().id("1").rightElement("dGVzdA==").build();
 
@@ -57,8 +57,8 @@ public class DiffCalculatorTest {
     }
 
     @Test
-    @DisplayName("Given two different inputs with same length must return Offset and Length")
-    void mustReturnInsight() {
+    @DisplayName("When two inputs have the same length but different content must return Offset and Length")
+    void when_twoDiffElementsHaveSameSizeButDifferentContent_mustReturnInsight() {
 
         var diff = Diff.builder().id("1")
                 .leftElement("dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0")
@@ -69,7 +69,6 @@ public class DiffCalculatorTest {
         List<String> expected = List.of("Offset: 6. Length: 4", "Offset: 23. Length: 3", "Offset: 41. Length: 2");
 
         Assertions.assertEquals(expected, result);
-
     }
 
 }

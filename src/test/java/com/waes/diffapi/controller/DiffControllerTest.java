@@ -1,92 +1,75 @@
 package com.waes.diffapi.controller;
 
 import com.waes.diffapi.domain.dto.DiffRequest;
-import com.waes.diffapi.domain.dto.DiffResponse;
+import com.waes.diffapi.helper.DiffRequestHelper;
+import com.waes.diffapi.helper.DiffResponseHelper;
 import com.waes.diffapi.service.DiffService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import java.util.List;
-
-@AutoConfigureDataMongo
-@WebFluxTest(DiffController.class)
+@ExtendWith(MockitoExtension.class)
 public class DiffControllerTest {
 
-    @MockBean
+    @Mock
     private DiffService diffService;
+    @InjectMocks
+    DiffController diffController;
 
-    @Autowired
-    private WebTestClient webClient;
+    private final DiffRequest validRequest = DiffRequestHelper.getDiffRequest();
 
     @Test
-    @DisplayName("Given valid left diff element must return 201 created")
-    void createLeftDiffElementMustReturn201Created() {
+    @DisplayName("When valid left diff request is provided method must complete")
+    void when_validLeftDiffRequestIsPassed_mustComplete() {
 
-        DiffRequest request = new DiffRequest("dGVzdA==");
-
-        webClient.post()
-                .uri("/v1/diff/{id}/left", "1")
-                .body(BodyInserters.fromValue(request))
-                .exchange()
-                .expectStatus().isCreated();
+        StepVerifier.create(diffController.createLeftInput("1", validRequest))
+            .expectSubscription()
+            .verifyComplete();
 
     }
 
     @Test
-    @DisplayName("Given valid right diff element must return 201 created")
-    void createRightDiffElementMustReturn201Created() {
+    @DisplayName("When valid right diff request is provided method must complete")
+    void when_validRightDiffRequestIsPassed_mustComplete() {
 
-        DiffRequest request = new DiffRequest("dGVzdA==");
-
-        webClient.post()
-                .uri("/v1/diff/{id}/right", "1")
-                .body(BodyInserters.fromValue(request))
-                .exchange()
-                .expectStatus().isCreated();
-
-    }
-
-
-    @Test
-    @DisplayName("Given an existing Diff with the specified id should return 200 OK")
-    void mustReturn200Ok() {
-
-        DiffResponse diffResponse = DiffResponse.builder().insights(List.of("Elements are equal")).build();
-        Mono<DiffResponse> diffResponseMono = Mono.just(diffResponse);
-
-        Mockito.when(diffService.getDiffById("1")).thenReturn(diffResponseMono);
-
-        webClient.get()
-                .uri("/v1/diff/{id}","1")
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.insights").isArray();
+        StepVerifier.create(diffController.createRightInput("1", validRequest))
+                .expectSubscription()
+                .verifyComplete();
 
     }
 
     @Test
-    @DisplayName("Given a non-existent Diff with the specified id should return 404 Not Found")
-    void mustReturn404NotFound() {
+    @DisplayName("When requested diff exists must return 200 OK")
+    void when_requestedDiffExists_mustComplete() {
 
-        Mockito.when(diffService.getDiffById("99")).thenReturn(Mono.empty());
+        Mockito.when(diffService.getDiffById("1"))
+                .thenReturn(Mono.just(DiffResponseHelper.getEqualDiffResponse()));
 
-        webClient.get()
-                .uri("/v1/diff/{id}","99")
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .exchange()
-                .expectStatus().isNotFound();
+        StepVerifier.create(diffController.getDiff("1"))
+                .expectSubscription()
+                .expectNext(ResponseEntity.ok(DiffResponseHelper.getEqualDiffResponse()))
+                .verifyComplete();
+
+    }
+
+    @Test
+    @DisplayName("When requested diff does not exists must return not found")
+    void when_requestedDiffDoesNotExist_mustComplete() {
+
+        Mockito.when(diffService.getDiffById("1"))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(diffController.getDiff("1"))
+                .expectSubscription()
+                .expectNext(ResponseEntity.notFound().build())
+                .verifyComplete();
 
     }
 
