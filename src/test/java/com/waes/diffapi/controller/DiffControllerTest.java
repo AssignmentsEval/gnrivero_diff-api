@@ -1,6 +1,9 @@
 package com.waes.diffapi.controller;
 
+import com.waes.diffapi.domain.Diff;
+import com.waes.diffapi.domain.constant.Side;
 import com.waes.diffapi.domain.dto.DiffRequest;
+import com.waes.diffapi.helper.DiffHelper;
 import com.waes.diffapi.helper.DiffRequestHelper;
 import com.waes.diffapi.helper.DiffResponseHelper;
 import com.waes.diffapi.service.DiffService;
@@ -29,8 +32,14 @@ public class DiffControllerTest {
     @DisplayName("When valid left diff request is provided method must complete")
     void when_validLeftDiffRequestIsPassed_mustComplete() {
 
+        Diff leftDiff = DiffHelper.getLeftDiff();
+
+        Mockito.when(diffService.createOrUpdateDiff("1", validRequest, Side.LEFT))
+                .thenReturn(Mono.just(leftDiff));
+
         StepVerifier.create(diffController.createLeftInput("1", validRequest))
             .expectSubscription()
+            .expectNext(leftDiff)
             .verifyComplete();
 
     }
@@ -39,8 +48,14 @@ public class DiffControllerTest {
     @DisplayName("When valid right diff request is provided method must complete")
     void when_validRightDiffRequestIsPassed_mustComplete() {
 
+        Diff rightDiff = DiffHelper.getRightDiff();
+
+        Mockito.when(diffService.createOrUpdateDiff("1", validRequest, Side.RIGHT))
+                .thenReturn(Mono.just(rightDiff));
+
         StepVerifier.create(diffController.createRightInput("1", validRequest))
                 .expectSubscription()
+                .expectNext(rightDiff)
                 .verifyComplete();
 
     }

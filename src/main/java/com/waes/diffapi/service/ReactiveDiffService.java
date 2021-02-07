@@ -1,5 +1,6 @@
 package com.waes.diffapi.service;
 
+import com.waes.diffapi.domain.Diff;
 import com.waes.diffapi.domain.calculator.DiffCalculator;
 import com.waes.diffapi.domain.constant.Side;
 import com.waes.diffapi.domain.dto.DiffRequest;
@@ -19,13 +20,12 @@ public class ReactiveDiffService implements DiffService {
     private DiffCalculator diffCalculator;
 
     @Override
-    public void createOrUpdateDiff(final String id, final DiffRequest diffRequest, final Side side) {
-        diffRepository.findById(id)
+    public Mono<Diff> createOrUpdateDiff(final String id, final DiffRequest diffRequest, final Side side) {
+        return diffRepository.findById(id)
                 .defaultIfEmpty(diffRequest.convertToDiff(id, side))
                 .flatMap(d -> Mono.just(diffRequest.convertToDiff(id, side, d.toBuilder())))
                 .flatMap(d -> Mono.just(d.toBuilder().insights(diffCalculator.calculate(d)).build()))
-                .flatMap(diffRepository::save)
-                .subscribe();
+                .flatMap(diffRepository::save);
     }
 
     @Override

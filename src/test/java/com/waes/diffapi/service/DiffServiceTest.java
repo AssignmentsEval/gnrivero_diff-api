@@ -58,7 +58,7 @@ public class DiffServiceTest {
 
         final DiffRequest request = Mockito.spy(new DiffRequest("dGVzdA=="));
 
-        diffService.createOrUpdateDiff("1", request, Side.RIGHT);
+        diffService.createOrUpdateDiff("1", request, Side.RIGHT).subscribe();
 
         verify(diffCalculator, times(1))
                 .calculate(diffBeforeCalc);
@@ -101,7 +101,7 @@ public class DiffServiceTest {
 
         final DiffRequest request = Mockito.spy(new DiffRequest("dGVzdA=="));
 
-        diffService.createOrUpdateDiff("1", request, Side.LEFT);
+        diffService.createOrUpdateDiff("1", request, Side.LEFT).subscribe();
 
         verify(diffCalculator, times(1))
                 .calculate(diffBeforeCalc);

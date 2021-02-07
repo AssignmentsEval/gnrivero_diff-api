@@ -8,4 +8,8 @@ public final class DiffRequestHelper {
         return new DiffRequest("dGVzdA==");
     }
 
+    public static DiffRequest getDiffRequestWithCustomValue(String value) {
+        return new DiffRequest(value);
+    }
+
 }
