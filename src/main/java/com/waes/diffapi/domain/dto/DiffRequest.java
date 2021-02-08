@@ -1,12 +1,14 @@
 package com.waes.diffapi.domain.dto;
 
 import com.waes.diffapi.domain.Diff;
+import com.waes.diffapi.domain.exception.InvalidDataValueException;
 import com.waes.diffapi.domain.constant.Side;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * Represents an abstraction and encapsulates information
