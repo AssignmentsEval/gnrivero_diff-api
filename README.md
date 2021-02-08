@@ -10,6 +10,7 @@ You will require compatibility with Java 8+ to run this application.
 <h3>How to build and run diff-api application</h3>
 
 Prior to run any command go to the application folder 'diff-api/'. <br>
+make sure you are on 'develop' branch.
 
 First ensure application builds and  all tests run correctly. To do so, in a linux/unix console run:
 
