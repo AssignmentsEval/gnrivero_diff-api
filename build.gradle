@@ -43,16 +43,6 @@ jacocoTestReport {
 		html.enabled true
 	}
 
-	afterEvaluate {
-		getClassDirectories().setFrom(classDirectories.files.collect {
-			fileTree(dir: it,
-					exclude: [
-							'**/Application**',
-							'**/config/**'
-					]
-			)
-		})
-	}
 }
 
 jacocoTestCoverageVerification
