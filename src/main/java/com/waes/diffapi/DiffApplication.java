@@ -44,13 +44,11 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  * You can this way use a POST method to create a new Diff Side resource. To update it the API can apply a patch method
  * to update only value field given a certain Id.
  *
- * Error Handling: Better error handling using an ExceptionHandler or/and ControllerAdvice. Helps to give the client
- * an expected response in case of error. Not having this can lead to Spring's default error handling.
+ * Error Handling: Better error handling using an ExceptionHandler or a similar feature as ControllerAdvice.
+ * Helps to give the client an expected response in case of error. Not having this can lead to Spring's default
+ * error handling.
  *
  * Database Config: Different config between test, development and production config. Alternatives, using spring profiles.
- *
- * Input data validation: validate input data with a selected criteria. Alternatives can be, ad-hoc logic or
- * use Hibernate validator for dtos.
  *
  * Mapping (alternative): Map dto to domain objects using a library like Mapstruct, depending on the case
  * it can be good to delegate that responsibility in other methods. Very complex mapping can be difficult to implement
@@ -60,9 +58,9 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  * complex mapping logic, sometimes is better to use the service layer.
  *
  * Test Coverage: Tests over internal logic (diff calculator), service, and domain classes that contribute to
- * the solution are 100% tested (this can be seen in Jacoco test report), however dto and Diff class shows a 50%
- * because equals, hashCode and toString are not tested. The overall application shows 72% but I think that core
- * logic methods are fully covered.
+ * the solution are 100% tested (this can be seen in Jacoco test report build/reports/jacoco/index.html),
+ * however dto and Diff class shows a 50% because equals, hashCode and toString are not tested. The overall application
+ * shows 72% but I think that core logic methods are fully covered.
  *
  */
 @SpringBootApplication
