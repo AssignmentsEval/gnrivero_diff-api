@@ -62,6 +62,8 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  * however dto and Diff class shows a 50% because equals, hashCode and toString are not tested. The overall application
  * shows 72% but I think that core logic methods are fully covered.
  *
+ * Code linters: such as checkstyle and PMD are useful tools to guarantee clean code and avoid spaghetti code.
+ *
  */
 @SpringBootApplication
 @EnableReactiveMongoRepositories

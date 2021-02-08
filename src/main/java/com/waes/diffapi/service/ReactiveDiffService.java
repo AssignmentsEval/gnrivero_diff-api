@@ -6,7 +6,6 @@ import com.waes.diffapi.domain.constant.Side;
 import com.waes.diffapi.domain.dto.DiffRequest;
 
 import com.waes.diffapi.domain.dto.DiffResponse;
-import com.waes.diffapi.domain.exception.InvalidDataValueException;
 import com.waes.diffapi.repository.DiffReactiveRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
