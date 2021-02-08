@@ -34,6 +34,9 @@ import static org.springframework.http.HttpStatus.CREATED;
  * As json input is a restriction for this application I specified the type of data
  * the application consumes and produces.
  *
+ * Create Input methods : Returns "201 created" if creation is successful, otherwise returns "400 bad request".
+ * Get Diff: Returns 200 OK if diff is found, otherwise returns "404 not found".
+ *
  */
 @RestController
 @RequestMapping("/v1/diff")

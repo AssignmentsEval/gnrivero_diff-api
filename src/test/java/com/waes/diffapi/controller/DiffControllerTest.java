@@ -38,9 +38,11 @@ public class DiffControllerTest {
         Mockito.when(diffService.createOrUpdateDiff("1", validRequest, Side.LEFT))
                 .thenReturn(Mono.just(leftDiff));
 
+        ResponseEntity<Object> expectedResponse = new ResponseEntity<>(HttpStatus.CREATED);
+
         StepVerifier.create(diffController.createLeftInput("1", validRequest))
             .expectSubscription()
-            .expectNext(new ResponseEntity(HttpStatus.CREATED))
+            .expectNext(expectedResponse)
             .verifyComplete();
 
     }
@@ -54,9 +56,11 @@ public class DiffControllerTest {
         Mockito.when(diffService.createOrUpdateDiff("1", validRequest, Side.RIGHT))
                 .thenReturn(Mono.just(rightDiff));
 
+        ResponseEntity<Object> expectedResponse = new ResponseEntity<>(HttpStatus.CREATED);
+
         StepVerifier.create(diffController.createRightInput("1", validRequest))
                 .expectSubscription()
-                .expectNext(new ResponseEntity(HttpStatus.CREATED))
+                .expectNext(expectedResponse)
                 .verifyComplete();
 
     }
