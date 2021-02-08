@@ -40,12 +40,17 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  *
  * Suggestions for improvement:
  *
- * Endpoint signatures. You can ask the clients for an object containing all necessary info like id, side, and value.
+ * Endpoint signatures: You can ask the clients for an object containing all necessary info like id, side, and value.
  * You can this way use a POST method to create a new Diff Side resource. To update it the API can apply a patch method
  * to update only value field given a certain Id.
  *
+ * Error Handling: Better error handling using an ExceptionHandler or ControllerAdvice.
  *
+ * Database Config: Different config between test, development and production config.
  *
+ * Input data validation: validate input data with a selected criteria.
+ *
+ * Mapping: Use mapping for dto to domain objects mapping using a library like Mapstruct (for simple mapping)
  *
  */
 @SpringBootApplication

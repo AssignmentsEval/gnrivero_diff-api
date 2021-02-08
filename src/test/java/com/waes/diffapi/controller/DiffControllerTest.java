@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -39,7 +40,7 @@ public class DiffControllerTest {
 
         StepVerifier.create(diffController.createLeftInput("1", validRequest))
             .expectSubscription()
-            .expectNext(leftDiff)
+            .expectNext(new ResponseEntity(HttpStatus.CREATED))
             .verifyComplete();
 
     }
@@ -55,7 +56,7 @@ public class DiffControllerTest {
 
         StepVerifier.create(diffController.createRightInput("1", validRequest))
                 .expectSubscription()
-                .expectNext(rightDiff)
+                .expectNext(new ResponseEntity(HttpStatus.CREATED))
                 .verifyComplete();
 
     }
