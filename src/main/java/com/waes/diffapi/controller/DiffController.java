@@ -1,6 +1,5 @@
 package com.waes.diffapi.controller;
 
-import com.waes.diffapi.domain.Diff;
 import com.waes.diffapi.domain.constant.Side;
 import com.waes.diffapi.domain.dto.DiffRequest;
 
@@ -16,9 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -35,6 +34,9 @@ import static org.springframework.http.HttpStatus.CREATED;
  * As json input is a restriction for this application I specified the type of data
  * the application consumes and produces.
  *
+ * Create Input methods : Returns "201 created" if creation is successful, otherwise returns "400 bad request".
+ * Get Diff: Returns 200 OK if diff is found, otherwise returns "404 not found".
+ *
  */
 @RestController
 @RequestMapping("/v1/diff")
@@ -44,15 +46,17 @@ public class DiffController {
     private DiffService diffService;
 
     @PostMapping(value = "/{id}/left", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(CREATED)
-    public Mono<Diff> createLeftInput(@PathVariable String id, @RequestBody DiffRequest diffRequest) {
-        return diffService.createOrUpdateDiff(id, diffRequest, Side.LEFT);
+    public Mono<ResponseEntity<Object>> createLeftInput(@PathVariable String id, @RequestBody DiffRequest diffRequest) {
+        return diffService.createOrUpdateDiff(id, diffRequest, Side.LEFT)
+                .thenReturn(new ResponseEntity<>(CREATED))
+                .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().body(e.getMessage())));
     }
 
     @PostMapping(value = "/{id}/right", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(CREATED)
-    public Mono<Diff> createRightInput(@PathVariable String id, @RequestBody DiffRequest diffRequest) {
-        return diffService.createOrUpdateDiff(id, diffRequest, Side.RIGHT);
+    public Mono<ResponseEntity<Object>> createRightInput(@PathVariable String id, @RequestBody DiffRequest diffRequest) {
+        return diffService.createOrUpdateDiff(id, diffRequest, Side.RIGHT)
+                .thenReturn(new ResponseEntity<>(CREATED))
+                .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().body(e.getMessage())));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
