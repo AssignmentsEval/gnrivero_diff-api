@@ -47,7 +47,7 @@ public class DiffIntegrationTest {
     }
 
     @Test
-    @DisplayName("When right diff element is created must return 400 bad request")
+    @DisplayName("When right diff element is empty or null must return 400 bad request")
     void when_rightDiffElementIsEmpty_mustReturn400BadRequest() {
 
         DiffRequest nullRequest = DiffRequestHelper.getDiffRequestWithCustomValue(null);
@@ -69,7 +69,7 @@ public class DiffIntegrationTest {
     }
 
     @Test
-    @DisplayName("When left diff element is created must return 400 bad request")
+    @DisplayName("When left diff element is empty or null must return 400 bad request")
     void when_leftDiffElementIsEmpty_mustReturn400BadRequest() {
 
         DiffRequest nullRequest = DiffRequestHelper.getDiffRequestWithCustomValue(null);
@@ -88,6 +88,32 @@ public class DiffIntegrationTest {
                 .exchange()
                 .expectStatus().isBadRequest();
 
+    }
+
+    @Test
+    @DisplayName("When left diff element is not a valid bas64 entry must return 400 bad request")
+    void when_leftDiffElementNotValidBase64_mustReturn400BadRequest() {
+
+        DiffRequest base64InvalidInput = DiffRequestHelper.getDiffRequestWithCustomValue("dGV4eHRlc3R4eHh0dGVzeHRlc3Qe=");
+
+        webClient.post()
+                .uri("/v1/diff/{id}/left", "1")
+                .body(BodyInserters.fromValue(base64InvalidInput))
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    @DisplayName("When right diff element is not a valid bas64 entry must return 400 bad request")
+    void when_rightDiffElementNotValidBase64_mustReturn400BadRequest() {
+
+        DiffRequest base64InvalidInput = DiffRequestHelper.getDiffRequestWithCustomValue("dGV4eHRlc3R4eHh0dGVzeHRlc3Qe=");
+
+        webClient.post()
+                .uri("/v1/diff/{id}/right", "1")
+                .body(BodyInserters.fromValue(base64InvalidInput))
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test

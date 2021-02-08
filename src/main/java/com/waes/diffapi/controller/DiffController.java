@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.Optional;
 
 
@@ -57,6 +58,7 @@ public class DiffController {
                 .flatMap( dr -> {
                         Optional<String> value = Optional.ofNullable(dr.getValue());
                         if(value.isPresent() && !value.get().isEmpty()) {
+                            Base64.getDecoder().decode(value.get());
                             return Mono.just(dr);
                         }
                         throw new InvalidDataValueException();
@@ -65,7 +67,7 @@ public class DiffController {
                 .flatMap(d -> Mono.just(ResponseEntity
                         .created(URI.create(String.format("/v1/diff/%s", id)))
                         .build()))
-                .onErrorResume(InvalidDataValueException.class, e -> Mono.just(
+                .onErrorResume(e -> Mono.just(
                         ResponseEntity.badRequest().body(ErrorResponseBody.builder()
                                 .errorDetail(e.getMessage())
                                 .build())));
