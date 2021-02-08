@@ -38,6 +38,14 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  * Builder/Value annotations that ensure object immutability and a clearer and concise object construction
  * syntax.
  *
+ * Suggestions for improvement:
+ *
+ * Endpoint signatures. You can ask the clients for an object containing all necessary info like id, side, and value.
+ * You can this way use a POST method to create a new Diff Side resource. To update it the API can apply a patch method
+ * to update only value field given a certain Id.
+ *
+ *
+ *
  *
  */
 @SpringBootApplication
