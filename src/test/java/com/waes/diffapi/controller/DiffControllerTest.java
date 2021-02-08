@@ -14,10 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.net.URI;
 
 @ExtendWith(MockitoExtension.class)
 public class DiffControllerTest {
@@ -30,7 +31,7 @@ public class DiffControllerTest {
     private final DiffRequest validRequest = DiffRequestHelper.getDiffRequest();
 
     @Test
-    @DisplayName("When valid left diff request is provided method must complete")
+    @DisplayName("When left diff request is provided method must return 201 created")
     void when_validLeftDiffRequestIsPassed_mustComplete() {
 
         Diff leftDiff = DiffHelper.getLeftDiff();
@@ -38,9 +39,9 @@ public class DiffControllerTest {
         Mockito.when(diffService.createOrUpdateDiff("1", validRequest, Side.LEFT))
                 .thenReturn(Mono.just(leftDiff));
 
-        ResponseEntity<Object> expectedResponse = new ResponseEntity<>(HttpStatus.CREATED);
+        ResponseEntity<Object> expectedResponse = ResponseEntity.created(URI.create("/v1/diff/1")).build();
 
-        StepVerifier.create(diffController.createLeftInput("1", validRequest))
+        StepVerifier.create(diffController.upsertDiffData("1", "left", validRequest))
             .expectSubscription()
             .expectNext(expectedResponse)
             .verifyComplete();
@@ -48,7 +49,7 @@ public class DiffControllerTest {
     }
 
     @Test
-    @DisplayName("When valid right diff request is provided method must complete")
+    @DisplayName("When right diff request is provided method must return 201 created")
     void when_validRightDiffRequestIsPassed_mustComplete() {
 
         Diff rightDiff = DiffHelper.getRightDiff();
@@ -56,9 +57,9 @@ public class DiffControllerTest {
         Mockito.when(diffService.createOrUpdateDiff("1", validRequest, Side.RIGHT))
                 .thenReturn(Mono.just(rightDiff));
 
-        ResponseEntity<Object> expectedResponse = new ResponseEntity<>(HttpStatus.CREATED);
+        ResponseEntity<Object> expectedResponse = ResponseEntity.created(URI.create("/v1/diff/1")).build();
 
-        StepVerifier.create(diffController.createRightInput("1", validRequest))
+        StepVerifier.create(diffController.upsertDiffData("1", "right", validRequest))
                 .expectSubscription()
                 .expectNext(expectedResponse)
                 .verifyComplete();

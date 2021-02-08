@@ -47,6 +47,50 @@ public class DiffIntegrationTest {
     }
 
     @Test
+    @DisplayName("When right diff element is created must return 400 bad request")
+    void when_rightDiffElementIsEmpty_mustReturn400BadRequest() {
+
+        DiffRequest nullRequest = DiffRequestHelper.getDiffRequestWithCustomValue(null);
+
+        webClient.post()
+                .uri("/v1/diff/{id}/right", "1")
+                .body(BodyInserters.fromValue(nullRequest))
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        DiffRequest emptyRequest = DiffRequestHelper.getDiffRequestWithCustomValue("");
+
+        webClient.post()
+                .uri("/v1/diff/{id}/right", "1")
+                .body(BodyInserters.fromValue(emptyRequest))
+                .exchange()
+                .expectStatus().isBadRequest();
+
+    }
+
+    @Test
+    @DisplayName("When left diff element is created must return 400 bad request")
+    void when_leftDiffElementIsEmpty_mustReturn400BadRequest() {
+
+        DiffRequest nullRequest = DiffRequestHelper.getDiffRequestWithCustomValue(null);
+
+        webClient.post()
+                .uri("/v1/diff/{id}/left", "1")
+                .body(BodyInserters.fromValue(nullRequest))
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        DiffRequest emptyRequest = DiffRequestHelper.getDiffRequestWithCustomValue("");
+
+        webClient.post()
+                .uri("/v1/diff/{id}/left", "1")
+                .body(BodyInserters.fromValue(emptyRequest))
+                .exchange()
+                .expectStatus().isBadRequest();
+
+    }
+
+    @Test
     @DisplayName("When a diff element exists must return 200 OK")
     void when_diffIsFound_mustReturn200Ok() {
 
