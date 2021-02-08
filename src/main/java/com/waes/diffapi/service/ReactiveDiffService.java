@@ -12,6 +12,24 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+
+/**
+ * Diff Service implementation.
+ *
+ * Creation or Update of Diff objects
+ *
+ * This class is responsible for creating/updating a Diff object/document. Diff is computed
+ * at creation time before being saved. If a Diff doesn't exist a method returns a new Diff
+ * object to be computed. If it does the selected side value is set and then the diff over
+ * both sides is computed. Finally the object is saved.
+ *
+ *
+ * Retrieving a Diff result
+ *
+ * This class is also responsible for calling repository methods to retrieve a Diff object
+ * from the database, convert it to DiffResponse object and return it.
+ *
+* */
 @Service
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class ReactiveDiffService implements DiffService {

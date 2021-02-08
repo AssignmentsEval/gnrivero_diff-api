@@ -6,6 +6,11 @@ import lombok.Value;
 import java.io.Serializable;
 import java.util.List;
 
+
+/**
+ * A class to represent the response given to the client when
+ * queries for Diff results
+ */
 @Value
 @Builder
 public class DiffResponse implements Serializable {
