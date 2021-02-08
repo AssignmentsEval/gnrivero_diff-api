@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-
 /**
  * Represents an abstraction and encapsulates information
  * received by DiffController and passed to Service layer
  *
- * Behavior: This class has a method to get a Diff from its data.
+ * This class has a method to get a Diff from its data.
  * It's a class responsible to transport data from controller layer to
  * service layer and has the knowledge to know how to create a Diff object
  * from its data.
