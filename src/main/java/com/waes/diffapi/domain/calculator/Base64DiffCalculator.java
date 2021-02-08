@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * This particular implementation decodes base64 information and converts it to
  * byte array (binary and original data).
  *
- * After the comparison returns a result with details about the computation.
+ * After comparison, returns a result with details about the computation.
  *
  * All data received is supposed to be valid, so no validation is made here.
  * Only check for null values to avoid NPE.

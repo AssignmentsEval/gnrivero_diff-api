@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 
 /**
  * Diff Application
- * 
  *
- * This application uses Spring Boot as framework and MongoDB.
+ *
+ * This application is implemented using Spring Boot and MongoDB.
  *
  * The main features included (with scalability in mind) are:
  *
@@ -22,6 +22,8 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  * Embedded MongoDB: To keep the advantage gained with WebFlux and Spring's reactive stack, I decided to use
  * a embedded MongoDB no-SQL database. As object's relationship wasn't the main focus of this application
  * and SQL databases work in a blocking/transactional way I thought that a reactive MongoDB would be a much better fit.
+ * Disclaimer: This is not a production implementation, if so, test and productive database config should be in
+ * different configuration (properties or yml) files and or Spring profiles to distinguish both.
  *
  * Mongo Reactive Repositories: instead of a MongoTemplate I decided to use the ReactiveRepository
  * approach. The main reasons are ease of use, implementation and requires less configuration.
