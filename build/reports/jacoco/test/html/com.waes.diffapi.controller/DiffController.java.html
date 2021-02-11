@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DiffController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">diff-api</a> &gt; <a href="index.source.html" class="el_package">com.waes.diffapi.controller</a> &gt; <span class="el_source">DiffController.java</span></div><h1>DiffController.java</h1><pre class="source lang-java linenums">package com.waes.diffapi.controller;
+
+import com.waes.diffapi.domain.constant.Side;
+import com.waes.diffapi.domain.dto.DiffRequest;
+
+import com.waes.diffapi.domain.dto.DiffResponse;
+import com.waes.diffapi.domain.dto.ErrorResponseBody;
+import com.waes.diffapi.domain.exception.InvalidDataValueException;
+import com.waes.diffapi.service.DiffService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+
+import java.net.URI;
+import java.util.Base64;
+import java.util.Optional;
+
+
+/**
+ * Diff Controller
+ *
+ * It's the entrypoint which the application communicates with other APIs.
+ *
+ * upsertDiffData method validates data input preventing empty data to be added
+ * then calls the service method to save and process diff operations
+ *
+ * As json input is a restriction for this application I specified the type of data
+ * the application consumes and produces.
+ *
+ * Create Input methods : Returns &quot;201 created&quot; if creation is successful, otherwise returns &quot;400 bad request&quot;.
+ * Get Diff: Returns 200 OK if diff is found, otherwise returns &quot;404 not found&quot;.
+ *
+ */
+@RestController
+@RequestMapping(&quot;/v1/diff&quot;)
+<span class="fc" id="L46">@AllArgsConstructor(access = AccessLevel.PACKAGE)</span>
+public class DiffController {
+
+    private DiffService diffService;
+
+    @PostMapping(value = &quot;/{id}/{diffSide:left|right}&quot;, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Mono&lt;ResponseEntity&lt;Object&gt;&gt; upsertDiffData(
+            @PathVariable final String id,
+            @PathVariable final String diffSide,
+            @RequestBody final DiffRequest diffRequest) {
+
+<span class="fc" id="L57">        return Mono.just(diffRequest)</span>
+<span class="fc" id="L58">                .flatMap( dr -&gt; {</span>
+<span class="fc" id="L59">                        Optional&lt;String&gt; value = Optional.ofNullable(dr.getValue());</span>
+<span class="fc bfc" id="L60" title="All 4 branches covered.">                        if(value.isPresent() &amp;&amp; !value.get().isEmpty()) {</span>
+<span class="fc" id="L61">                            Base64.getDecoder().decode(value.get());</span>
+<span class="fc" id="L62">                            return Mono.just(dr);</span>
+                        }
+<span class="fc" id="L64">                        throw new InvalidDataValueException();</span>
+                })
+<span class="fc" id="L66">                .flatMap( dr -&gt; diffService.createOrUpdateDiff(id, dr, Side.from(diffSide)))</span>
+<span class="fc" id="L67">                .flatMap(d -&gt; Mono.just(ResponseEntity</span>
+<span class="fc" id="L68">                        .created(URI.create(String.format(&quot;/v1/diff/%s&quot;, id)))</span>
+<span class="fc" id="L69">                        .build()))</span>
+<span class="fc" id="L70">                .onErrorResume(e -&gt; Mono.just(</span>
+<span class="fc" id="L71">                        ResponseEntity.badRequest().body(ErrorResponseBody.builder()</span>
+<span class="fc" id="L72">                                .errorDetail(e.getMessage())</span>
+<span class="fc" id="L73">                                .build())));</span>
+    }
+
+    @GetMapping(value = &quot;/{id}&quot;, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono&lt;ResponseEntity&lt;DiffResponse&gt;&gt; getDiff(@PathVariable String id) {
+<span class="fc" id="L78">        return diffService.getDiffById(id)</span>
+<span class="fc" id="L79">                .flatMap(dr -&gt; Mono.just(ResponseEntity.ok(dr)))</span>
+<span class="fc" id="L80">                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DiffApplication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">diff-api</a> &gt; <a href="index.source.html" class="el_package">com.waes.diffapi</a> &gt; <span class="el_source">DiffApplication.java</span></div><h1>DiffApplication.java</h1><pre class="source lang-java linenums">package com.waes.diffapi;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
+
+
+/**
+ * Diff Application
+ *
+ *
+ * This application is implemented using Spring Boot and MongoDB.
+ *
+ * The main features included (with scalability in mind) are:
+ *
+ * WebFlux: The Spring reactive web framework that makes a more efficient use of threads and memory,
+ * improving requests processing and enhancing application scalability. WebFlux offers a non-blocking web
+ * stack and handles concurrency in background using Reactor library. Avoiding the use of one thread for an entire
+ * request (from controller to repository layer operations) but instead using different ones for different processing
+ * stages allows the application to process more requests in a very efficient way.
+ *
+ * Embedded MongoDB: To keep the advantage gained with WebFlux and Spring's reactive stack, I decided to use
+ * a embedded MongoDB no-SQL database. As object's relationship wasn't the main focus of this application
+ * and SQL databases work in a blocking/transactional way I thought that a reactive MongoDB would be a much better fit.
+ * Disclaimer: This is not a production implementation, if so, test and productive database config should be in
+ * different configuration (properties or yml) files and or Spring profiles to distinguish both.
+ *
+ * Mongo Reactive Repositories: instead of a MongoTemplate I decided to use the ReactiveRepository
+ * approach. The main reasons are ease of use, implementation and requires less configuration.
+ * Besides, functions provided by ReactiveRepository were enough for the functionalities I needed, customization
+ * in search by certain fields is supported.
+ *
+ * Utils:
+ * ----
+ *
+ * Jacoco: To keep track of the application code coverage.
+ * Lombok: To avoid boilerplate code and endless getters and setters. Another important feature is the
+ * Builder/Value annotations that ensure object immutability and a clearer and concise object construction
+ * syntax.
+ *
+ * Suggestions for improvement:
+ *
+ * Endpoint signatures: You can ask the clients for an object containing all necessary info like id, side, and value.
+ * You can this way use a POST method to create a new Diff Side resource. To update it the API can apply a patch method
+ * to update only value field given a certain Id.
+ *
+ * Error Handling: Better error handling using an ExceptionHandler or a similar feature as ControllerAdvice.
+ * Helps to give the client an expected response in case of error. Not having this can lead to Spring's default
+ * error handling.
+ *
+ * Database Config: Different config between test, development and production config. Alternatives, using spring profiles.
+ *
+ * Mapping (alternative): Map dto to domain objects using a library like Mapstruct, depending on the case
+ * it can be good to delegate that responsibility in other methods. Very complex mapping can be difficult to implement
+ * in Mapstruct, in those case, those mappings can be done in the service layer. Also when you have few objects to map,
+ * using a library for that could be too much. In conclusion when you have a number of mappings and
+ * those mappings are simple but objects have a lot of members Mapstruct can be useful. Few mapping use cases and
+ * complex mapping logic, sometimes is better to use the service layer.
+ *
+ * Test Coverage: Tests over internal logic (diff calculator), service, and domain classes that contribute to
+ * the solution are 100% tested (this can be seen in Jacoco test report build/reports/jacoco/index.html),
+ * however dto and Diff class shows a 50% because equals, hashCode and toString are not tested. The overall application
+ * shows 72% but I think that core logic methods are fully covered.
+ *
+ * Code linters: such as checkstyle and PMD are useful tools to guarantee clean code and avoid spaghetti code.
+ *
+ */
+@SpringBootApplication
+@EnableReactiveMongoRepositories
+<span class="fc" id="L70">public class DiffApplication {</span>
+
+	public static void main(String[] args) {
+<span class="nc" id="L73">		SpringApplication.run(DiffApplication.class, args);</span>
+<span class="nc" id="L74">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

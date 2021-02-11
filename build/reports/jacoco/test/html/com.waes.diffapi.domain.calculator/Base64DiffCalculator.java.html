@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Base64DiffCalculator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">diff-api</a> &gt; <a href="index.source.html" class="el_package">com.waes.diffapi.domain.calculator</a> &gt; <span class="el_source">Base64DiffCalculator.java</span></div><h1>Base64DiffCalculator.java</h1><pre class="source lang-java linenums">package com.waes.diffapi.domain.calculator;
+
+import com.waes.diffapi.domain.Diff;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+/**
+ * Diff Calculator Implementation
+ *
+ * This particular implementation decodes base64 information and converts it to
+ * byte array (binary and original data).
+ *
+ * After comparison, returns a result with details about the computation.
+ *
+ * All data received is supposed to be valid, so no validation is made here.
+ * Only check for null values to avoid NPE.
+ *
+ * Possible results:
+ *
+ * &quot;Equal&quot;: Left and right are equal in size and content.
+ *
+ * &quot;Different Size&quot;: Left and right are present but differ in length.
+ *
+ * &quot;Both Sides Required&quot;: Indicates that one of the sides is null or empty. I don't considered null
+ * as a sizeable element, so &quot;Different Size&quot; doesn't apply here. Besides it's more descriptive of the
+ * real situation.
+ *
+ * &quot;Equal Size, Different Content&quot;: When both sides are present, have the same length but differ in content.
+ * Along with this state a report including Offset where the difference is and Length of the difference is return.
+ *
+ */
+@Component
+public class Base64DiffCalculator implements DiffCalculator {
+
+    private Base64.Decoder decoder;
+
+<span class="fc" id="L44">    public Base64DiffCalculator() {</span>
+<span class="fc" id="L45">        this.decoder = Base64.getDecoder();</span>
+<span class="fc" id="L46">    }</span>
+
+<span class="fc" id="L48">    @Getter</span>
+<span class="fc" id="L49">    @AllArgsConstructor</span>
+    public enum Result {
+<span class="fc" id="L51">        EQUAL(&quot;Inputs are equal&quot;),</span>
+<span class="fc" id="L52">        DIFFERENT_SIZE(&quot;Input sizes are not equal&quot;),</span>
+<span class="fc" id="L53">        EQUAL_SIZE_DIFFERENT_CONTENT(&quot;Result: &quot;),</span>
+<span class="fc" id="L54">        BOTH_SIDES_REQUIRED(&quot;Both sides are required to calculate diff&quot;);</span>
+
+<span class="fc" id="L56">        String insight;</span>
+    }
+
+    @Override
+    public List&lt;String&gt; calculate(final Diff diff) {
+
+<span class="pc bpc" id="L62" title="1 of 4 branches missed.">        if(diff.getLeftElement() == null || diff.getRightElement() == null) {</span>
+<span class="fc" id="L63">            return List.of(Result.BOTH_SIDES_REQUIRED.getInsight());</span>
+        }
+
+<span class="fc" id="L66">        byte[] left = decoder.decode(diff.getLeftElement());</span>
+<span class="fc" id="L67">        byte[] right = decoder.decode(diff.getRightElement());</span>
+
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (left.length != right.length) {</span>
+<span class="fc" id="L70">            return List.of(Result.DIFFERENT_SIZE.getInsight());</span>
+        }
+
+<span class="fc" id="L73">        int diffLength = 0;</span>
+<span class="fc" id="L74">        boolean isNewDiff = true;</span>
+<span class="fc" id="L75">        boolean isDifferent = false;</span>
+<span class="fc" id="L76">        StringBuffer diffInsight = new StringBuffer();</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (int i = 0; i &lt; left.length; i++) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (left[i] != right[i]) {</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">                if (isNewDiff) {</span>
+<span class="fc" id="L80">                    diffInsight.append(&quot;Offset: &quot;).append(i + 1).append(&quot;. &quot;);</span>
+                }
+<span class="fc" id="L82">                diffLength++;</span>
+<span class="fc" id="L83">                isNewDiff = false;</span>
+<span class="fc" id="L84">                isDifferent = true;</span>
+            } else {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">                if(!isNewDiff) {</span>
+<span class="fc" id="L87">                    diffInsight.append(&quot;Length: &quot;).append(diffLength).append(&quot;;&quot;);</span>
+<span class="fc" id="L88">                    diffLength = 0;</span>
+<span class="fc" id="L89">                    isNewDiff = true;</span>
+                }
+            }
+        }
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (isDifferent) {</span>
+<span class="fc" id="L95">            return Arrays.stream(diffInsight.toString().split(&quot;;&quot;))</span>
+<span class="fc" id="L96">                    .collect(Collectors.toUnmodifiableList());</span>
+        }
+
+<span class="fc" id="L99">        return List.of(Result.EQUAL.getInsight());</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
